@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import { database } from "../configs/firebaseConfig";
 import { ref, get, set } from "firebase/database";
+import {useLocation, useNavigate} from "react-router-dom";
+import RoomList from "./RoomList.tsx";
 
 interface RoomManagerProps {
     onRoomJoin: (room: string) => void;
@@ -8,6 +10,16 @@ interface RoomManagerProps {
 
 const RoomManager: React.FC<RoomManagerProps> = ({ onRoomJoin }) => {
     const [newRoomName, setNewRoomName] = useState<string>("");
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        const roomFromURL = params.get("room");
+        if (roomFromURL) {
+            onRoomJoin(roomFromURL);
+        }
+    }, [location.search, onRoomJoin]);
 
     const handleRoomCreationOrJoin = async () => {
         if (!newRoomName.trim()) {
@@ -22,6 +34,7 @@ const RoomManager: React.FC<RoomManagerProps> = ({ onRoomJoin }) => {
             if (!snapshot.exists()) {
                 await set(roomRef, { messages: {} });
             }
+            navigate(`?room=${newRoomName}`);
             onRoomJoin(newRoomName); // Join the room
         } catch (error) {
             console.error("Error checking or creating room:", error);
@@ -38,6 +51,7 @@ const RoomManager: React.FC<RoomManagerProps> = ({ onRoomJoin }) => {
                 onChange={(e) => setNewRoomName(e.target.value)}
             />
             <button onClick={handleRoomCreationOrJoin}>Create/Join Room</button>
+            <RoomList onRoomJoin={onRoomJoin} />
         </div>
     );
 };
