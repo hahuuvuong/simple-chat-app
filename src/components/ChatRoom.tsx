@@ -116,7 +116,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ room, username }) => {
                         {message.fileBase64 && (
                             <p>
                                 <a href={message.fileBase64} target="_blank" rel="noopener noreferrer">
-                                    {message.fileName}
+                                    <span role="img" aria-label="file-icon">📎</span> {message.fileName}
                                 </a>
                             </p>
                         )}
