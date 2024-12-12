@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { database } from "../configs/firebaseConfig";
-import { ref, get, onValue } from "firebase/database";
+import { ref, onValue } from "firebase/database";
 import {useNavigate} from "react-router-dom";
 
 interface RoomListProps {
