@@ -23,10 +23,12 @@ const RoomList: React.FC<RoomListProps> = ({ onRoomJoin }) => {
 
         return () => unsubscribe(); // Cleanup listener on unmount
     }, []);
+
     const onRoomJoinClick = (room: string ) => {
         navigate(`?room=${room}`);
         onRoomJoin(room);
     }
+
     return (
         <div>
             <h2>Available Rooms</h2>

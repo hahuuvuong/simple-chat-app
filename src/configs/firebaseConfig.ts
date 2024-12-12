@@ -2,8 +2,8 @@ import { initializeApp } from "firebase/app";
 import { getDatabase } from "firebase/database";
 
 const firebaseConfig = {
-    databaseURL: "https://tesst-4a0ad-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "tesst-4a0ad",
+    databaseURL: process.env.REACT_APP_FIREBASE_DATABASE_URL,
+    projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
 };
 
 const app = initializeApp(firebaseConfig);
