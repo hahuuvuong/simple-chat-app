@@ -89,6 +89,33 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ room, username }) => {
         navigate("/"); // Navigate back to the room list
     };
 
+    const downloadFile = (base64Data: string | undefined, fileName: string | undefined) => {
+        // Extract Base64 data without the `data:<type>;base64,` prefix
+        const base64ContentArray = base64Data!.split(",");
+        const byteCharacters = atob(base64ContentArray[1]);
+
+        // Convert Base64 to byte array
+        const byteNumbers = Array.from(byteCharacters).map(char => char.charCodeAt(0));
+        const byteArray = new Uint8Array(byteNumbers);
+
+        // Create a Blob from the byte array
+        const blob = new Blob([byteArray]);
+
+        // Create a download link
+        const url = URL.createObjectURL(blob);
+
+        // Programmatically trigger download
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = fileName!;
+        document.body.appendChild(link);
+        link.click();
+
+        // Clean up resources
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    };
+
 
     const onFileSelect = (e: any) => {
         const selectedFile = e.target.files?.[0];
@@ -114,11 +141,11 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ room, username }) => {
                             <span className="timestamp"> ({message.timestamp})</span>
                         </p>
                         {message.fileBase64 && (
-                            <p>
-                                <a href={message.fileBase64} target="_blank" rel="noopener noreferrer">
-                                    <span role="img" aria-label="file-icon">📎</span> {message.fileName}
-                                </a>
-                            </p>
+                            <button
+                                onClick={() => downloadFile(message.fileBase64, message.fileName)}
+                            >
+                                <span role="img" aria-label="file-icon">📎</span> {message.fileName}
+                            </button>
                         )}
                     </div>
                 ))}
